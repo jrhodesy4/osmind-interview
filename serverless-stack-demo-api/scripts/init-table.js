@@ -9,12 +9,12 @@ const createTable = async () => {
   const params = {
     TableName: tableName,
     AttributeDefinitions: [
-      { AttributeName: 'PK', AttributeType: 'S' },
-      { AttributeName: 'SK', AttributeType: 'S' },
+      { AttributeName: 'userId', AttributeType: 'S' },
+      { AttributeName: 'noteId', AttributeType: 'S' },
     ],
     KeySchema: [
-      { AttributeName: 'PK', KeyType: 'HASH' },
-      { AttributeName: 'SK', KeyType: 'RANGE' },
+      { AttributeName: 'userId', KeyType: 'HASH' },
+      { AttributeName: 'noteId', KeyType: 'RANGE' },
     ],
     BillingMode: 'PAY_PER_REQUEST',
   }
