@@ -2,7 +2,7 @@ import AWS from "aws-sdk";
 
 const params = { region: 'localhost', endpoint: 'http://localhost:8000' };
 
-const client = new AWS.DynamoDB(params);
+const client = new AWS.DynamoDB.DocumentClient(params);
 
 export default {
   get   : (params) => client.get(params).promise(),
