@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { API } from "aws-amplify";
 import { Link } from "react-router-dom";
 import { BsPencilSquare } from "react-icons/bs";
+import { GrAttachment } from "react-icons/gr";
 import ListGroup from "react-bootstrap/ListGroup";
 import { LinkContainer } from "react-router-bootstrap";
 import { useAppContext } from "../libs/contextLib";
@@ -46,16 +47,17 @@ export default function Home() {
             <span className="ml-2 font-weight-bold">Create a new note</span>
           </ListGroup.Item>
         </LinkContainer>
-        {notes.map(({ noteId, content, createdAt }) => (
+        {notes.map(({ noteId, content, createdAt, attachment }) => (
           <LinkContainer key={noteId} to={`/notes/${noteId}`}>
             <ListGroup.Item action>
               <span className="font-weight-bold">
                 {content.trim().split("\n")[0]}
               </span>
               <br />
-              <span className="text-muted">
+              <span className="text-muted mr-2">
                 Created: {new Date(createdAt).toLocaleString()}
               </span>
+              { attachment && <GrAttachment size={17} /> }
             </ListGroup.Item>
           </LinkContainer>
         ))}

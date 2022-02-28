@@ -5,6 +5,7 @@ import { useParams, useHistory } from "react-router-dom";
 import LoaderButton from "../components/LoaderButton";
 import { onError } from "../libs/errorLib";
 import { s3Upload } from "../libs/awsLib";
+import { isImage } from "../libs/utilLib";
 import config from "../config";
 import "./Notes.css";
 
@@ -129,17 +130,18 @@ export default function Notes() {
             />
           </Form.Group>
           <Form.Group controlId="file">
-            <Form.Label>Attachment</Form.Label>
+            <Form.Label className="d-block">Attachment</Form.Label>
             {note.attachment && (
-              <p>
-                <a
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  href={note.attachmentURL}
-                >
-                  {formatFilename(note.attachment)}
-                </a>
-              </p>
+              <a
+                target="_blank"
+                rel="noopener noreferrer"
+                href={note.attachmentURL}
+              >
+                { isImage(note.attachment) && <img src={note.attachmentURL} alt="Note attachment"/> }
+                <p>
+                    {formatFilename(note.attachment)}
+                </p>
+              </a>
             )}
             <Form.Control onChange={handleFileChange} type="file" />
           </Form.Group>
