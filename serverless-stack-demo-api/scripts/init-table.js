@@ -1,6 +1,6 @@
 const AWS = require('aws-sdk')
 
-const params = { region: 'localhost', endpoint: 'http://localhost:8000' };
+const params = { region: 'localhost', endpoint: 'http://localhost:8000', accessKeyId: 'accessKeyId', secretAccessKey: 'secretAccessKey' };
 
 const dynamodb = new AWS.DynamoDB(params);
 
