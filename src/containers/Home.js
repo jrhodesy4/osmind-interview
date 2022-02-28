@@ -44,7 +44,6 @@ export default function Home() {
 
   // updates search term and calls the method to filter notes
   const updateSearch = e => {
-    console.log(e.target.value);
     setSearchTerm(e.target.value);
     filterNotes(e.target.value);
   };
