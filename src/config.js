@@ -1,4 +1,8 @@
-const URL = 'http://localhost:4000/dev'
+// const URL = 'http://localhost:4000/dev';
+
+// Url to new api made for this assignment
+// Changed apiGateway region to from us-east-1 to us-west-1
+const URL = 'https://t1k9wqxwk7.execute-api.us-west-1.amazonaws.com/dev/osmind-lambda';
 
 const dev = {
   STRIPE_KEY: "pk_test_v1amvR35uoCNduJfkqGB8RLD",
@@ -7,7 +11,7 @@ const dev = {
     BUCKET: "notes-app-2-api-dev-attachmentsbucket-1xboyuq7t4m3b",
   },
   apiGateway: {
-    REGION: "us-east-1",
+    REGION: "us-west-1",
     URL,
   },
   cognito: {

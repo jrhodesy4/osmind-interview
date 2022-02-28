@@ -21,7 +21,8 @@ export default function Home() {
 
       try {
         const notes = await loadNotes();
-        setNotes(notes);
+        console.log('notes', notes);
+        setNotes(notes.notes);
       } catch (e) {
         onError(e);
       }
@@ -33,7 +34,7 @@ export default function Home() {
   }, [isAuthenticated]);
 
   function loadNotes() {
-    return API.get("notes", "/notes");
+    return API.get("notes", "/");
   }
 
   function renderNotesList(notes) {
