@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { BsPencilSquare } from "react-icons/bs";
 import { GrAttachment } from "react-icons/gr";
 import ListGroup from "react-bootstrap/ListGroup";
+import Form from "react-bootstrap/Form";
 import { LinkContainer } from "react-router-bootstrap";
 import { useAppContext } from "../libs/contextLib";
 import { onError } from "../libs/errorLib";
@@ -11,8 +12,10 @@ import "./Home.css";
 
 export default function Home() {
   const [notes, setNotes] = useState([]);
+  const [filteredNotes, setFilteredNotes] = useState([]);
   const { isAuthenticated } = useAppContext();
   const [isLoading, setIsLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     async function onLoad() {
@@ -38,16 +41,51 @@ export default function Home() {
     return API.get("notes", "/");
   }
 
+  // updates search term and calls the method to filter notes
+  const updateSearch = e => {
+    console.log(e.target.value);
+    setSearchTerm(e.target.value);
+    filterNotes(e.target.value);
+  };
+
+  // function to take in search term and
+  // filter all notes by term
+  const filterNotes = term => {
+
+    let tempArr = [];
+    for (let i=0; i< notes.length; i++) {
+      if (notes[i].content.toLowerCase().includes(term)) {
+        tempArr.push(notes[i]);
+      }
+    }
+    if (tempArr.length) {
+      setFilteredNotes(tempArr);
+    } else {
+      setFilteredNotes([]);
+    }
+  };
+
   function renderNotesList(notes) {
+    let content = searchTerm ? filteredNotes : notes;
     return (
-      <>
+      <> 
+        <Form className="d-flex mb-3">
+          <Form.Control
+            value={searchTerm}
+            onChange={updateSearch}
+            type="search"
+            placeholder="Filter notes"
+            className="me-2"
+            aria-label="Search"
+          />
+        </Form>
         <LinkContainer to="/notes/new">
           <ListGroup.Item action className="py-3 text-nowrap text-truncate">
             <BsPencilSquare size={17} />
             <span className="ml-2 font-weight-bold">Create a new note</span>
           </ListGroup.Item>
         </LinkContainer>
-        {notes.map(({ noteId, content, createdAt, attachment }) => (
+        { content.length ? content.map(({ noteId, content, createdAt, attachment }) => (
           <LinkContainer key={noteId} to={`/notes/${noteId}`}>
             <ListGroup.Item action>
               <span className="font-weight-bold">
@@ -60,7 +98,7 @@ export default function Home() {
               { attachment && <GrAttachment size={17} /> }
             </ListGroup.Item>
           </LinkContainer>
-        ))}
+        )) : <h2 className="mt-5 text-center">No notes match your search</h2> }
       </>
     );
   }
