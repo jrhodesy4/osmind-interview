@@ -3,8 +3,7 @@ import { API } from "aws-amplify";
 import { Link } from "react-router-dom";
 import { BsPencilSquare } from "react-icons/bs";
 import { GrAttachment } from "react-icons/gr";
-import ListGroup from "react-bootstrap/ListGroup";
-import Form from "react-bootstrap/Form";
+import { ListGroup, Form, Button, Row, Col } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { useAppContext } from "../libs/contextLib";
 import { onError } from "../libs/errorLib";
@@ -16,6 +15,8 @@ export default function Home() {
   const { isAuthenticated } = useAppContext();
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
+  const [replaceWith, setReplaceWith] = useState("");
+  const [toReplace, setToReplace] = useState("");
 
   useEffect(() => {
     async function onLoad() {
@@ -65,6 +66,31 @@ export default function Home() {
     }
   };
 
+  // case insensitive function to find and replace word in note content
+  const replaceWord = async () => {
+    let notesClone = [...notes];
+    let re = new RegExp(toReplace, "gi");
+    for (let i = 0; i < notesClone.length; i++) {
+      if (notesClone[i].content.match(re)) {
+        notesClone[i].content = notesClone[i].content.replaceAll(re, replaceWith);
+      }
+    }
+    try {
+      await updateNotes(notesClone); 
+      const notes = await loadNotes();
+      setNotes(notes.notes);
+    } catch (error) {
+        onError(error);
+    }
+  };
+
+  // makes update call to api
+  const updateNotes = (notesClone) => {
+    return API.post("notes", "/", {
+      body: { notes : notesClone }
+    });
+  };
+
   function renderNotesList(notes) {
     let content = searchTerm ? filteredNotes : notes;
     return (
@@ -78,6 +104,33 @@ export default function Home() {
             className="me-2"
             aria-label="Search"
           />
+        </Form>
+        <Form.Label>Replace every instance of a word in all your notes</Form.Label>
+        <Form className="d-flex mb-3">
+          <Row>
+            <Col>
+              <Form.Control
+                value={toReplace}
+                onChange={(e) => setToReplace(e.target.value)}
+                type="input"
+                placeholder="Find"
+                className="me-2"
+                aria-label="Find"
+              />
+            </Col>
+            <Col>
+              <Form.Control
+                value={replaceWith}
+                onChange={(e) => setReplaceWith(e.target.value)}
+                type="input"
+                placeholder="Replace"
+                className="me-2"
+                aria-label="Replace"
+              />
+            </Col>
+            <Button variant="danger" onClick={() => replaceWord()}>Replace</Button>
+
+          </Row>
         </Form>
         <LinkContainer to="/notes/new">
           <ListGroup.Item action className="py-3 text-nowrap text-truncate">
